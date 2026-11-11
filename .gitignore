@@ -1,0 +1,6 @@
+.devenv/
+.git/
+.terraform/
+
+*.tfstate
+*.tfstate.backup
