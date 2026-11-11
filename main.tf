@@ -40,6 +40,49 @@ resource "aws_s3_bucket_versioning" "bucket_versioning" {
   }
 }
 
+resource "aws_s3_bucket_public_access_block" "example" {
+  bucket = aws_s3_bucket.bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
+}
+
+data "aws_iam_policy_document" "public_read_document" {
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:GetObject",
+    ]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    resources = [
+      "${aws_s3_bucket.bucket.arn}/*",
+    ]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "s3:ListBucket",
+    ]
+    principals {
+      type        = "*"
+      identifiers = ["*"]
+    }
+    resources = [
+      aws_s3_bucket.bucket.arn
+    ]
+  }
+}
+
+resource "aws_s3_bucket_policy" "public_read_document" {
+  bucket = aws_s3_bucket.bucket.id
+  policy = data.aws_iam_policy_document.public_read_document.json
+}
+
 resource "aws_key_pair" "host_key" {
   key_name   = "NixOS"
   public_key = var.host-public-key
