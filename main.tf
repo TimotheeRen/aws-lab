@@ -29,6 +29,17 @@ resource "aws_vpc_security_group_egress_rule" "allow_all_traffic_internet" {
   ip_protocol       = "-1"
 }
 
+resource "aws_s3_bucket" "bucket" {
+  bucket = "ec2-bucket-3j2k3"
+}
+
+resource "aws_s3_bucket_versioning" "bucket_versioning" {
+  bucket = aws_s3_bucket.bucket.id
+  versioning_configuration {
+    status = "Enabled"
+  }
+}
+
 resource "aws_key_pair" "host_key" {
   key_name   = "NixOS"
   public_key = var.host-public-key
