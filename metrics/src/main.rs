@@ -1,7 +1,7 @@
 use axum::{Router, routing::get};
 use opentelemetry_appender_tracing::layer::OpenTelemetryTracingBridge;
 use opentelemetry_otlp::{LogExporter, WithExportConfig};
-use opentelemetry_sdk::logs::SdkLoggerProvider;
+use opentelemetry_sdk::{Resource, logs::SdkLoggerProvider};
 use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
 
 #[tokio::main]
@@ -14,6 +14,7 @@ async fn main() {
         .unwrap();
 
     let logging_provider = SdkLoggerProvider::builder()
+        .with_resource(Resource::builder().with_service_name("metrics-api").build())
         .with_batch_exporter(exporter)
         .build();
 
