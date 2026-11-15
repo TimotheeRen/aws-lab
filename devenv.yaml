@@ -1,3 +1,10 @@
+# yaml-language-server: $schema=https://devenv.sh/devenv.schema.json
+inputs:
+  rust-overlay:
+    url: github:oxalica/rust-overlay
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
 nixpkgs:
   permitted_unfree_packages:
-    - terraform
+  - terraform
